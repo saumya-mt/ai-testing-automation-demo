@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+/**
+ * Home component - Main landing page for the Philips Support Portal
+ * Displays a grid of feature cards for navigation
+ */
 const Home = () => {
+  const [welcomeMessage] = useState('Welcome to Philips Support Portal');
+
   return (
     <div className="home-container">
-      <h1>Welcome to Philips Support Portal</h1>
+      <h1>{welcomeMessage}</h1>
       <div className="feature-grid">
         <Link to="/faqs" className="feature-card">
           <h3>FAQs</h3>
