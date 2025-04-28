@@ -1,0 +1,78 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+
+    - name: Install Node dependencies
+      run: npm install
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run linting
+      run: npm run lint
+
+    - name: Build frontend
+      run: npm run build
+
+    - name: Run AI Code Review
+      run: python3 ai-scripts/code_reviewer.py
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    - name: Run AI Test Generator
+      run: python3 ai-scripts/test_generator.py
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    - name: Run generated tests
+      run: npm test
+
+    - name: Upload code review report
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-review-report
+        path: reports/code_review_report.md
+
+    - name: Upload generated tests
+      uses: actions/upload-artifact@v3
+      with:
+        name: generated-tests
+        path: tests/auto_generated_tests/
+
+    - name: Deploy to Vercel
+      if: github.ref == 'refs/heads/main'
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      run: |
+        npm install -g vercel
+        vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+        vercel build --prod --token=$VERCEL_TOKEN
+        vercel deploy --prod --token=$VERCEL_TOKEN 

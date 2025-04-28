@@ -1,0 +1,183 @@
+.ai-dashboard {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ai-dashboard h1 {
+  color: var(--philips-blue);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card h2 {
+  color: var(--philips-dark-blue);
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Code Review Section */
+.code-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.review-item {
+  border-left: 3px solid var(--philips-blue);
+  padding-left: 1rem;
+}
+
+.review-item h3 {
+  color: var(--philips-gray);
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.review-item ul {
+  list-style: none;
+  padding: 0;
+}
+
+.review-item li {
+  color: var(--philips-gray);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.review-item li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--philips-blue);
+}
+
+/* Test Coverage Section */
+.test-coverage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.coverage-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 8px solid var(--philips-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.coverage-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--philips-blue);
+}
+
+.coverage-label {
+  color: var(--philips-gray);
+  font-size: 1.1rem;
+}
+
+/* AI Suggestions Section */
+.suggestions-list {
+  list-style: none;
+  padding: 0;
+}
+
+.suggestions-list li {
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+  color: var(--philips-gray);
+}
+
+.suggestions-list li:last-child {
+  border-bottom: none;
+}
+
+/* Recent Activity Section */
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.activity-time {
+  font-size: 0.8rem;
+  color: var(--philips-gray);
+}
+
+.activity-description {
+  color: var(--philips-dark-blue);
+}
+
+/* Loading State */
+.ai-dashboard.loading {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  text-align: center;
+}
+
+.loader-text {
+  color: var(--philips-blue);
+  margin-bottom: 1rem;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--philips-blue);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ai-dashboard {
+    padding: 1rem;
+  }
+} 
