@@ -30,7 +30,42 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests openai
 
+      - name: Verify OpenAI API Key
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python -c "
+          import os
+          import requests
+          
+          api_key = os.getenv('OPENAI_API_KEY')
+          if not api_key:
+              print('Error: OPENAI_API_KEY not found')
+              exit(1)
+              
+          headers = {
+              'Authorization': f'Bearer {api_key}',
+              'Content-Type': 'application/json'
+          }
+          
+          try:
+              response = requests.get(
+                  'https://api.openai.com/v1/models',
+                  headers=headers
+              )
+              if response.status_code == 200:
+                  print('OpenAI API key is valid')
+              else:
+                  print(f'Error validating API key: {response.text}')
+                  exit(1)
+          except Exception as e:
+              print(f'Error: {str(e)}')
+              exit(1)
+          "
+
       - name: Run AI Code Review
+        if: success()
+        continue-on-error: true
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,6 +73,8 @@ jobs:
           python ai-scripts/code_reviewer.py
 
       - name: Generate AI Tests
+        if: success()
+        continue-on-error: true
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,10 +82,12 @@ jobs:
           python ai-scripts/test_generator.py
 
       - name: Update Dashboard
+        if: always()
         run: |
           python ai-scripts/update_dashboard.py
 
       - name: Deploy Dashboard
+        if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

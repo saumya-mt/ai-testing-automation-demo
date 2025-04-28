@@ -27,4 +27,5 @@ const Home = () => {
   );
 };
 
-export default Home; 
+export default Home; // Add a comment for demo
+// Testing updated workflow
